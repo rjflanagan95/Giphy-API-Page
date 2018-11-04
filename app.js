@@ -1,5 +1,7 @@
 var themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
 
+var favGifArray = [];
+
 function refreshButtons() {
     $("#button-area").empty();
     for (var i = 0; i < themeArray.length; i++) {
@@ -19,6 +21,9 @@ $(document).on("click", ".gif-button", function() {
     var searchTerm = $(this).attr("id");
     var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=" + searchTerm;
 
+    $("#moreGifs").show()
+    $("#moreGifs").attr("value", $(this).attr("id"));
+
     // call ajax
     $.ajax({
         url: queryURL,
@@ -35,7 +40,38 @@ $(document).on("click", ".gif-button", function() {
             newGif.attr("status", "still");
             newGif.attr("src", shortcut.images.fixed_height_still.url);
             newGifBox.append(newGif);
-            newGifBox.append("<br><span class='rating'>Rating: " + (shortcut.rating).toUpperCase() + "</span>");
+            newGifBox.append("<br><span class='rating'>Rating: " + (shortcut.rating).toUpperCase() + "</span><br>");
+
+            $("#gif-area").prepend(newGifBox);
+        }
+    });
+});
+
+$(document).on("click", "#moreGifs", function() {
+    console.log()
+    $("#moreGifs").hide()
+
+    var searchTerm = $(this).attr("value");
+    var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&q=" + searchTerm;
+
+    // call ajax
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }) .then(function(response) {
+        for (var i = 10; i < 20; i++) {
+            var shortcut = response.data[i];
+            var newGifBox = $("<div>");
+            newGifBox.addClass("gif-box");
+            var newGif = $("<img>");
+            newGif.addClass("gif");
+            newGif.attr("data-still", shortcut.images.fixed_height_still.url);
+            newGif.attr("data-animate", shortcut.images.fixed_height.url);
+            newGif.attr("status", "still");
+            newGif.attr("src", shortcut.images.fixed_height_still.url);
+            newGifBox.append(newGif);
+            newGifBox.append("<br><span class='rating'>Rating: " + (shortcut.rating).toUpperCase() + "</span><br>");
+
             $("#gif-area").prepend(newGifBox);
         }
     });
@@ -83,4 +119,5 @@ $("#resetButton").on("click", function(event) {
 });
 
 // initialize the page
+$("#moreGifs").hide();
 refreshButtons();
