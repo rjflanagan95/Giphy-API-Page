@@ -1,6 +1,7 @@
 themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
 
 function refreshButtons() {
+    $("#button-area").empty();
     for (var i = 0; i < themeArray.length; i++) {
         var newButton = $("<button>");
         newButton.addClass("gif-button");
@@ -48,6 +49,14 @@ $(document).on("click", ".gif", function() {
         $(this).attr("src", $(this).attr("data-still"));
         $(this).attr("status", "still");;
     }
+});
+
+$("#submitNewButton").on("click", function() {
+    var newTopic = $("#inputNewButton").val().trim();
+    $("#inputNewButton").val("");
+
+    themeArray.push(newTopic);
+    refreshButtons();
 });
 
 refreshButtons();
