@@ -1,10 +1,10 @@
-themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
+var themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
 
 function refreshButtons() {
     $("#button-area").empty();
     for (var i = 0; i < themeArray.length; i++) {
         var newButton = $("<button>");
-        newButton.addClass("gif-button");
+        newButton.addClass("btn btn-outline-dark gif-button");
         newButton.attr("id", themeArray[i]);
         newButton.text(themeArray[i]);
         $("#button-area").append(newButton);
@@ -35,12 +35,13 @@ $(document).on("click", ".gif-button", function() {
             newGif.attr("status", "still");
             newGif.attr("src", shortcut.images.fixed_height_still.url);
             newGifBox.append(newGif);
-            newGifBox.append("<br><span class='rating'>" + shortcut.rating + "</span>");
+            newGifBox.append("<br><span class='rating'>Rating: " + (shortcut.rating).toUpperCase() + "</span>");
             $("#gif-area").prepend(newGifBox);
         }
     });
 });
 
+// start/stop gifs when clicked
 $(document).on("click", ".gif", function() {
     if ($(this).attr("status") === "still") {
         $(this).attr("src", $(this).attr("data-animate"));
@@ -51,7 +52,9 @@ $(document).on("click", ".gif", function() {
     }
 });
 
-$("#submitNewButton").on("click", function() {
+// when the "add" button is clicked, add the input to the themeArray and create new buttons
+$("#submitNewButton").on("click", function(event) {
+    event.preventDefault();
     var newTopic = $("#inputNewButton").val().trim();
     $("#inputNewButton").val("");
 
@@ -59,4 +62,25 @@ $("#submitNewButton").on("click", function() {
     refreshButtons();
 });
 
+// allows the user to hit "enter" instead of clicking the "add" button
+$("#inputNewButton").keydown(function(e) {
+    if (e.keyCode == 13) {
+        event.preventDefault();
+        var newTopic = $("#inputNewButton").val().trim();
+        $("#inputNewButton").val("");
+
+        themeArray.push(newTopic);
+        refreshButtons();
+    }
+})
+
+// clear any added topics
+$("#resetButton").on("click", function(event) {
+    event.preventDefault();
+    themeArray = [];
+    themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
+    refreshButtons();
+});
+
+// initialize the page
 refreshButtons();
