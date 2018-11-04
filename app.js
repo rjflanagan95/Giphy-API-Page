@@ -1,14 +1,13 @@
-var themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
+var topics = ["lord of the rings", "star wars", "harry potter", "avengers"];
 
-var favGifArray = [];
-
+// clear all buttons, then loop through the array to create new buttons
 function refreshButtons() {
     $("#button-area").empty();
-    for (var i = 0; i < themeArray.length; i++) {
+    for (var i = 0; i < topics.length; i++) {
         var newButton = $("<button>");
         newButton.addClass("btn btn-outline-dark gif-button");
-        newButton.attr("id", themeArray[i]);
-        newButton.text(themeArray[i]);
+        newButton.attr("id", topics[i]);
+        newButton.text(topics[i]);
         $("#button-area").append(newButton);
     }
 }
@@ -31,6 +30,7 @@ $(document).on("click", ".gif-button", function() {
     }) .then(function(response) {
         for (var i = 0; i < 10; i++) {
             var shortcut = response.data[i];
+            console.log(shortcut);
             var newGifBox = $("<div>");
             newGifBox.addClass("gif-box");
             var newGif = $("<img>");
@@ -40,7 +40,8 @@ $(document).on("click", ".gif-button", function() {
             newGif.attr("status", "still");
             newGif.attr("src", shortcut.images.fixed_height_still.url);
             newGifBox.append(newGif);
-            newGifBox.append("<br><span class='rating'>Rating: " + (shortcut.rating).toUpperCase() + "</span><br>");
+            newGifBox.append("<br><span>Rating: " + (shortcut.rating).toUpperCase() + "</span><br>");
+            newGifBox.append("<a href=" + shortcut.source_post_url + "><span>Source</span></a><br>");
 
             $("#gif-area").prepend(newGifBox);
         }
@@ -48,7 +49,6 @@ $(document).on("click", ".gif-button", function() {
 });
 
 $(document).on("click", "#moreGifs", function() {
-    console.log()
     $("#moreGifs").hide()
 
     var searchTerm = $(this).attr("value");
@@ -88,13 +88,13 @@ $(document).on("click", ".gif", function() {
     }
 });
 
-// when the "add" button is clicked, add the input to the themeArray and create new buttons
+// when the "add" button is clicked, add the input to the topics and create new buttons
 $("#submitNewButton").on("click", function(event) {
     event.preventDefault();
     var newTopic = $("#inputNewButton").val().trim();
     $("#inputNewButton").val("");
 
-    themeArray.push(newTopic);
+    topics.push(newTopic);
     refreshButtons();
 });
 
@@ -105,7 +105,7 @@ $("#inputNewButton").keydown(function(e) {
         var newTopic = $("#inputNewButton").val().trim();
         $("#inputNewButton").val("");
 
-        themeArray.push(newTopic);
+        topics.push(newTopic);
         refreshButtons();
     }
 })
@@ -113,8 +113,8 @@ $("#inputNewButton").keydown(function(e) {
 // clear any added topics
 $("#resetButton").on("click", function(event) {
     event.preventDefault();
-    themeArray = [];
-    themeArray = ["lord of the rings", "star wars", "harry potter", "avengers"];
+    topics = [];
+    topics = ["lord of the rings", "star wars", "harry potter", "avengers"];
     refreshButtons();
 });
 
